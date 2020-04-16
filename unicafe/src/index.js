@@ -10,17 +10,26 @@ const Statistics = ({ good, neutral, bad }) => {
   const positiveFeedback = total > 0 ? good / total : 0;
   const average = total > 0 ? (good - bad) / total : 0;
 
-  return (
-    <>
-      <h1>Statistics</h1>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>Total: {total}</p>
-      <p>Average: {average}</p>
-      <p>% Positive: {positiveFeedback}</p>
-    </>
-  );
+  if (total > 0) {
+    return (
+      <>
+        <h1>Statistics</h1>
+        <p>Good: {good}</p>
+        <p>Neutral: {neutral}</p>
+        <p>Bad: {bad}</p>
+        <p>Total: {total}</p>
+        <p>Average: {average}</p>
+        <p>% Positive: {positiveFeedback}</p>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <h1>Statistics</h1>
+        <p>No feedback given</p>
+      </>
+    );
+  }
 };
 
 const App = () => {
