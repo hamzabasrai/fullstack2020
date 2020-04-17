@@ -18,6 +18,7 @@ const App = () => {
   }, []);
 
   const handleSearchChange = (event) => setSearch(event.target.value);
+  const handleShowClick = (countryName) => () => setSearch(countryName);
 
   const countriesToShow =
     search === ""
@@ -29,7 +30,7 @@ const App = () => {
   return (
     <div>
       <Search search={search} handleSearchChange={handleSearchChange} />
-      <Results countries={countriesToShow} />
+      <Results countries={countriesToShow} handleShowClick={handleShowClick} />
     </div>
   );
 };
