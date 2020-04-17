@@ -18,14 +18,15 @@ const App = () => {
     fetchData();
   }, []);
 
-  const addPerson = (event) => {
+  const addPerson = async (event) => {
     event.preventDefault();
     if (persons.some((person) => person.name === newName)) {
       alert(`${newName} is already in the phonebook`);
       return;
     }
     const newPerson = { name: newName, number: newNumber };
-    setPersons(persons.concat(newPerson));
+    const response = await axios.post("http://localhost:3001/persons", newPerson);
+    setPersons(persons.concat(response.data));
     setNewName("");
     setNewNumber("");
   };
