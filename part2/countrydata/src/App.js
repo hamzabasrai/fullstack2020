@@ -28,7 +28,7 @@ const App = () => {
         );
 
   return (
-    <div>
+    <div style={{ display: "grid", gridTemplateColumns:'1fr 1fr', padding: "5% 10%" }}>
       <Search search={search} handleSearchChange={handleSearchChange} />
       <Results countries={countriesToShow} handleShowClick={handleShowClick} />
     </div>
