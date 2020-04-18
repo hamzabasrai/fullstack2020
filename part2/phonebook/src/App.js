@@ -18,10 +18,28 @@ const App = () => {
     fetchData();
   }, []);
 
+  const updatePerson = async (existing) => {
+    const action = window.confirm(
+      `${newName} is already in the phonebook, replace the old number with a new one?`
+    );
+    if (action) {
+      const update = { name: newName, number: newNumber };
+      const updatedPerson = await personService.update(existing.id, update);
+      setPersons(
+        persons.map((person) =>
+          person.id !== existing.id ? person : updatedPerson
+        )
+      );
+      setNewName("");
+      setNewNumber("");
+    }
+  };
+
   const addPerson = async (event) => {
     event.preventDefault();
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already in the phonebook`);
+    const existing = persons.find((person) => person.name === newName);
+    if (existing !== undefined) {
+      updatePerson(existing);
       return;
     }
     const person = { name: newName, number: newNumber };
