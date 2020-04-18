@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,8 +12,8 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get("http://localhost:3001/persons");
-      setPersons(response.data);
+      const persons = await personService.getAll();
+      setPersons(persons);
     };
     fetchData();
   }, []);
@@ -24,9 +24,9 @@ const App = () => {
       alert(`${newName} is already in the phonebook`);
       return;
     }
-    const newPerson = { name: newName, number: newNumber };
-    const response = await axios.post("http://localhost:3001/persons", newPerson);
-    setPersons(persons.concat(response.data));
+    const person = { name: newName, number: newNumber };
+    const newPerson = await personService.create(person);
+    setPersons(persons.concat(newPerson));
     setNewName("");
     setNewNumber("");
   };
