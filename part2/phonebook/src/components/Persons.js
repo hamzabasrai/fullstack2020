@@ -1,11 +1,27 @@
 import React from "react";
 
-const Persons = ({ persons }) => (
-  <>
-    {persons.map((person) => (
-      <p key={person.name}>
+const Person = ({ person, handleDelete }) => {
+  
+  const showDeleteDialog = () => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      handleDelete(person.id);
+    }
+  };
+
+  return (
+    <div>
+      <p style={{ display: "inline" }}>
         {person.name} {person.number}
       </p>
+      <button onClick={showDeleteDialog}>Delete</button>
+    </div>
+  );
+};
+
+const Persons = ({ persons, handleDelete }) => (
+  <>
+    {persons.map((person) => (
+      <Person key={person.id} person={person} handleDelete={handleDelete} />
     ))}
   </>
 );

@@ -43,6 +43,11 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const handleDelete = async (id) => {
+    await personService.remove(id);
+    setPersons(persons.filter((person) => person.id !== id));
+  };
+
   const personsToShow =
     filter === ""
       ? persons
@@ -63,7 +68,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
   );
 };
