@@ -4,7 +4,7 @@ const Person = ({ person, handleDelete }) => {
   
   const showDeleteDialog = () => {
     if (window.confirm(`Delete ${person.name}?`)) {
-      handleDelete(person.id);
+      handleDelete(person);
     }
   };
 

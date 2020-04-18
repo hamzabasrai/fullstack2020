@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 import personService from "./services/persons";
 
 const App = () => {
@@ -9,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,6 +20,14 @@ const App = () => {
     };
     fetchData();
   }, []);
+
+  const showMessage = (message, isError) => {
+    setIsError(isError);
+    setMessage(message);
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
 
   const updatePerson = async (existing) => {
     const action = window.confirm(
@@ -32,6 +43,7 @@ const App = () => {
       );
       setNewName("");
       setNewNumber("");
+      showMessage(`${updatedPerson.name}'s number was updated`, false);
     }
   };
 
@@ -47,6 +59,7 @@ const App = () => {
     setPersons(persons.concat(newPerson));
     setNewName("");
     setNewNumber("");
+    showMessage(`${newPerson.name} was added successfully`, false);
   };
 
   const handleNameChange = (event) => {
@@ -61,9 +74,20 @@ const App = () => {
     setFilter(event.target.value);
   };
 
-  const handleDelete = async (id) => {
-    await personService.remove(id);
-    setPersons(persons.filter((person) => person.id !== id));
+  const handleDelete = (toDelete) => {
+    personService
+      .remove(toDelete.id)
+      .then((_) => {
+        showMessage(`${toDelete.name} was deleted successfully`, false);
+        setPersons(persons.filter((person) => person.id !== toDelete.id));
+      })
+      .catch((error) => {
+        showMessage(
+          `${toDelete.name} has already been deleted from server`,
+          true
+        );
+        setPersons(persons.filter((person) => person.id !== toDelete.id));
+      });
   };
 
   const personsToShow =
@@ -76,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} isError={isError} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a Person</h3>
       <PersonForm
