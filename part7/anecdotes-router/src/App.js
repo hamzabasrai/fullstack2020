@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
 
 import AnecdoteList from './components/AnecdoteList';
 import Footer from './components/Footer';
@@ -27,22 +27,24 @@ const App = () => {
   ]);
 
   const [notification, setNotification] = useState('');
+  const history = useHistory();
 
   const addNew = (anecdote) => {
-    anecdote.id = (Math.random() * 10000).toFixed(0);
+    anecdote.id = Number((Math.random() * 10000).toFixed(0));
     setAnecdotes(anecdotes.concat(anecdote));
+    history.push('/');
+    setNotification(`New anecdote '${anecdote.content}' created`);
+    setTimeout(() => setNotification(''), 10000);
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
 
   const vote = (id) => {
     const anecdote = anecdoteById(id);
-
     const voted = {
       ...anecdote,
       votes: anecdote.votes + 1,
     };
-
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
@@ -55,6 +57,7 @@ const App = () => {
     <div>
       <h1>Software Anecdotes</h1>
       <Menu />
+      <p>{notification}</p>
       <Switch>
         <Route path="/anecdotes/:id">
           <Anecdote anecdote={anecdote} />
