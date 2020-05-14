@@ -2,9 +2,9 @@ import React from 'react';
 import { useField } from '../hooks';
 
 const AddAnecdoteForm = (props) => {
-  const content = useField('text');
-  const author = useField('text');
-  const info = useField('text');
+  const [content, resetContent] = useField('text');
+  const [author, resetAuthor] = useField('text');
+  const [info, resetInfo] = useField('text');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,10 +16,16 @@ const AddAnecdoteForm = (props) => {
     });
   };
 
+  const handleReset = (e) => {
+    resetContent();
+    resetAuthor();
+    resetInfo();
+  };
+
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
           <input name="content" {...content} />
@@ -33,6 +39,7 @@ const AddAnecdoteForm = (props) => {
           <input name="info" {...info} />
         </div>
         <button>create</button>
+        <button type="reset">reset</button>
       </form>
     </div>
   );
