@@ -18,7 +18,34 @@ const useField = (type) => {
 const useCountry = (name) => {
   const [country, setCountry] = useState(null);
 
-  useEffect();
+  useEffect(() => {
+    axios
+      .get(
+        `https://restcountries.eu/rest/v2/name/${name}?fullText=true
+    `
+      )
+      .then((response) => {
+        const data = response.data[0];
+        setCountry({
+          found: true,
+          data,
+        });
+      })
+      .catch(() => {
+        // Prevent 'not found' text if search field is blank
+        switch (name) {
+          case '':
+            setCountry(null);
+            break;
+
+          default:
+            setCountry({
+              found: false,
+            });
+            break;
+        }
+      });
+  }, [name]);
 
   return country;
 };
